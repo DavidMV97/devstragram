@@ -13,6 +13,7 @@ class PostController extends Controller
     {
 
         $posts = Post::where('user_id', $user->id)->paginate(20);
+       
         return view('dashboard', [
             'user' => $user,
             'posts' => $posts
@@ -61,7 +62,8 @@ class PostController extends Controller
     public function show(User $user,  Post $post)
     {
         return view('posts.show', [
-            'post' => $post
+            'post' => $post,
+            'user' => $user
         ]);
     }
 
