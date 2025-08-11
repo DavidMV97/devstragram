@@ -7,7 +7,8 @@
     <div class="flex justify-center">
         <div class="w-full md:w-8/12 lg:w-6/12 flex flex-col items-center md:flex-row">
             <div class="w-8/12 lg:w-6/12 px-5">
-                <img src="{{  $user->imagen ? asset('perfiles') . '/' .$user->imagen : asset('img/usuario.svg') }}" alt="Imagen de usuario">
+                <img src="{{ $user->imagen ? asset('perfiles') . '/' . $user->imagen : asset('img/usuario.svg') }}"
+                    alt="Imagen de usuario">
             </div>
             <div class="md:3-8/12 lg:w-6/12 px-5 py-10 flex flex-col items-center md:items-start md:py-10 md:justify-center">
                 <div class="flex items-center gap-2">
@@ -26,17 +27,36 @@
                     @endauth
                 </div>
                 <p class="text-gray-800 text-sm mb-3 font-bold mt-5">
-                    0
-                    <span class="font-normal">Seguidores</span>
+                    {{ $user->followers->count() }}
+                    <span class="font-normal"> @choice('Seguidor|Seguidores', $user->followers->count())</span>
                 </p>
                 <p class="text-gray-800 text-sm mb-3 font-bold">
-                    0
-                    <span class="font-normal">Siguiendo</span>
+                    {{ $user->followings->count() }}
+                    <span class="font-normal"> Siguiendo </span>
                 </p>
                 <p class="text-gray-800 text-sm mb-3 font-bold">
                     {{ $user->posts->count() }}
                     <span class="font-normal">Posts</span>
                 </p>
+
+                @auth
+                    @if ($user->id !== auth()->user()->id)
+                        @if (!$user->siguiendo(auth()->user()))
+                            <form action="{{ route('users.follow', $user) }}" method="POST">
+                                @csrf
+                                <input type="submit" value="Seguir"
+                                    class="bg-blue-600 text-white uppercase rounded-lg px-3 py-1 text-xs font-bold cursor-pointer">
+                            </form>
+                        @else
+                            <form action="{{ route('users.unfollow', $user) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <input type="submit" value="Dejar de seguir"
+                                    class="bg-red-600 text-white uppercase rounded-lg px-3 py-1 text-xs font-bold cursor-pointer">
+                            </form>
+                        @endif
+                    @endif
+                @endauth
             </div>
         </div>
     </div>

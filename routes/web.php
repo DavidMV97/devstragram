@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\ComentarioController;
+use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\ImagenController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PerfilController;
@@ -42,3 +43,8 @@ Route::post('/posts/{post}/likes', [LikeController::class, 'store'])->name('post
 Route::delete('/posts/{post}/likes', [LikeController::class, 'destroy'])->name('posts.likes.destroy')->middleware('auth');
 
 Route::get('/{user:username}', [PostController::class, 'index'])->name('posts.index');
+
+// Siguiendo usuarios
+
+Route::post('/{user:username}/follow', [FollowerController::class, 'store'])->name('users.follow')->middleware('auth'); 
+Route::delete('/{user:username}/unfollow', [FollowerController::class, 'destroy'])->name('users.unfollow')->middleware('auth'); 
